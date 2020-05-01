@@ -21,6 +21,9 @@ class Cube {
         this.boundingElementWidth =
             this.boundingElement.offsetWidth || this.boundingElement.innerWidth;
         this.currentValue = 0;
+        this.startAnimationTimeout = 0;
+        this.endAnimationTimeout = 0;
+        this.setValueTimeout = 0;
     }
     getRandom(start, end) {
         return start + Math.random() * (end - start);
@@ -124,18 +127,21 @@ class Cube {
             }
         }
         this.reorderSides(value);
-        setTimeout(() => {
+        clearTimeout(this.startAnimationTimeout);
+        clearTimeout(this.setValueTimeout);
+        clearTimeout(this.endAnimationTimeout);
+        this.startAnimationTimeout = setTimeout(() => {
             this.element.style.transitionDuration = "1s";
             this.element.style.top = `${endPoint[1]}px`;
             this.element.style.left = `${endPoint[0]}px`;
-            this.element.style.transform = `rotateX(360deg) rotateY(360deg) rotateZ(${
+            this.element.style.transform = `rotateX(720deg) rotateY(360deg) rotateZ(${
                 360 - lineAngle
             }deg)`;
         }, 200);
-        setTimeout(() => {
+        this.setValueTimeout = setTimeout(() => {
             this.currentValue = value;
         }, 1200);
-        setTimeout(() => {
+        this.endAnimationTimeout = setTimeout(() => {
             this.boundingElement.style.opacity = 0;
         }, 3000);
     }
